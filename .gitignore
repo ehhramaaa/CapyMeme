@@ -1,5 +1,5 @@
 # Mengabaikan file log
-*.txt
+query.txt
 
 # Mengabaikan folder build
 raw/

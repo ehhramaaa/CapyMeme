@@ -1,6 +1,6 @@
 
 build:
-	docker build -t agent301 .
+	docker build -t capymeme .
 
 up:
 	docker-compose up -d
@@ -9,6 +9,6 @@ down:
 	docker-compose down
 
 delete:
-	docker rmi agent301 --force
+	docker rmi capymeme --force
 
 .PHONY: build up down delete
