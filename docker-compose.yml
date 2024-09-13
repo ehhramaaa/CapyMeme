@@ -1,8 +1,8 @@
 version: '3'
 services:
   bot:
-    container_name: 'Agent301'
-    image: agent301
+    container_name: 'CapyMeme'
+    image: capymeme-bot
     stop_signal: SIGINT
     restart: on-failure
     deploy:
