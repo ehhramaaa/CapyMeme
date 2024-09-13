@@ -1,5 +1,3 @@
-## Update: Get And Completing Main Tasks
-
 [![Static Badge](https://img.shields.io/badge/Telegram-Bot%20Link-Link?style=for-the-badge&logo=Telegram&logoColor=white&logoSize=auto&color=blue)](https://t.me/the_capybara_meme_bot/start?startapp=c749201405a471872c338164f3727bdc)
 
 ![demo](https://raw.githubusercontent.com/ehhramaaa/CapyMeme/main/assets/Sunny_20240913_164813.png)
@@ -20,7 +18,7 @@
 |      Auto Staking      |    ✅     |
 |   Random User Agent    |    ✅     |
 
-## [Settings](https://github.com/ehhramaaa/agent301/blob/main/config.yml)
+## [Settings](https://github.com/ehhramaaa/CapyMeme/blob/main/config.yml)
 
 |     Settings     |                               Description                                |
 | :--------------: | :----------------------------------------------------------------------: |
