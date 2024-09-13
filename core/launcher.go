@@ -116,7 +116,7 @@ func ProcessBot(config *config.Config) {
 	amountStake := config.Float("amount-stake")
 
 	if int(amountStake) > 1 {
-		helper.PrettyLog("error", "Amount Stake Must 0.01 - 1, Example : 1 = 100% and 0.01 = 1%")
+		helper.PrettyLog("error", "Amount Stake Must 0 - 1, Example : 1 = 100%, 0.01 = 1%, 0 = 0%")
 		return
 	}
 
