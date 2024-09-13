@@ -1,7 +1,8 @@
 ## Update: Get And Completing Main Tasks
- [![Static Badge](https://img.shields.io/badge/Telegram-Bot%20Link-Link?style=for-the-badge&logo=Telegram&logoColor=white&logoSize=auto&color=blue)](https://t.me/Agent301Bot/app?startapp=onetime5024522783)
 
-![demo](https://raw.githubusercontent.com/ehhramaaa/agent301/main/assets/Sunny_20240910_190645.png)
+[![Static Badge](https://img.shields.io/badge/Telegram-Bot%20Link-Link?style=for-the-badge&logo=Telegram&logoColor=white&logoSize=auto&color=blue)](https://t.me/the_capybara_meme_bot/start?startapp=c749201405a471872c338164f3727bdc)
+
+![demo](https://raw.githubusercontent.com/ehhramaaa/CapyMeme/main/assets/Sunny_20240913_164813.png)
 
 ## Recommendation before use
 
@@ -9,25 +10,28 @@
 
 ## Features
 
-|      Feature      | Supported |
-| :---------------: | :-------: |
-|  Multithreading   |    ✅     |
-|  Auto Claim Task  |    ✅     |
-|  Auto Spin Wheel  |    ✅     |
-| Auto Daily Streak |    ✅     |
-|  Use Query Data   |    ✅     |
+|        Feature         | Supported |
+| :--------------------: | :-------: |
+|     Multithreading     |    ✅     |
+|     Use Query Data     |    ✅     |
+|    Auto Claim Task     |    ✅     |
+| Auto Claim Achievement |    ✅     |
+|    Auto Spin Wheel     |    ✅     |
+|      Auto Staking      |    ✅     |
+|   Random User Agent    |    ✅     |
 
 ## [Settings](https://github.com/ehhramaaa/agent301/blob/main/config.yml)
 
-|          Settings           |                                 Description                                  |
-| :-------------------------: | :--------------------------------------------------------------------------: |
-|    **API-URL**    |   BASE API URL   |
-|         **REFER-URL**          |             BASE BOT URL              |
-|         **REF-ID**          |             (Your telegram ID)              |
-| **AUTO-SPIN** |            Auto Spin Wheel If Have Ticket             |
-|   **QUERY-FILE**   |                    Your Query File Name (.txt)                    |
-|     **MAX-THREAD**     |              Max Thread Worker Run Parallel                |
-|       **RANDOM-SLEEP**        |                Delay before the next lap (e.g. [1800, 3600])                 |
+|     Settings     |                               Description                                |
+| :--------------: | :----------------------------------------------------------------------: |
+|   **API-URL**    |                               BASE API URL                               |
+|  **REFER-URL**   |                               BASE BOT URL                               |
+|  **QUERY-FILE**  |                       Your Query File Name (.txt)                        |
+|  **MAX-THREAD**  |                      Max Thread Worker Run Parallel                      |
+| **RANDOM-SLEEP** |              Delay before the next lap (e.g. [1800, 3600])               |
+|  **AUTO-SPIN**   |                      Auto Spin Wheel If Have Ticket                      |
+|  **AUTO-STAKE**  |            Auto Spin Staking With Custom Amount Of Your Score            |
+| **AMOUNT-STAKE** | Percentage Amount To Stake Your Score (e.g. 0 = 0%, 0.01 = 1%, 1 = 100%) |
 
 ## Prerequisites 📚
 
@@ -40,9 +44,10 @@ Before you begin, make sure you have the following installed:
 You can download the [**repository**](https://github.com/ehhramaaa/agent301.git) by cloning it to your system and installing the necessary dependencies:
 
 ```shell
-git clone https://github.com/ehhramaaa/agent301.git
-cd agent301
+git clone https://github.com/ehhramaaa/CapyMeme.git
+cd CapyMeme
 go mod tidy
+go run .
 ```
 
 Then you can do build application by typing:
@@ -50,11 +55,13 @@ Then you can do build application by typing:
 Windows:
 
 ```shell
-go build -o agent301.exe
+go build -o CapyMeme.exe
 ```
 
 Linux:
 
 ```shell
-go build -o agent301
+go build -o CapyMeme
+chmod +x CapyMeme
+./CapyMeme
 ```

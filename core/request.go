@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
 )
 
 type Client struct {
@@ -147,18 +146,3 @@ func (c *Client) staking(amount string, poolId int) ([]byte, error) {
 
 	return c.makeRequest("POST", "/auth/stakes/submit", payload)
 }
-
-// Get Account Detail
-// func (c *Client) getMe(refId string) ([]byte, error) {
-// 	payload := map[string]string{
-// 		"referrer_id": refId,
-// 	}
-
-// 	return c.makeRequest("POST", "/getMe", payload)
-// }
-
-// func (c *Client) getWheel() ([]byte, error) {
-// 	payload := map[string]string{}
-
-// 	return c.makeRequest("POST", "/wheel/load", payload)
-// }

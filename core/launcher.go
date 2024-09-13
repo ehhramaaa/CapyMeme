@@ -278,14 +278,14 @@ func launchBot(client *Client, account *Account, isAutoSpin bool, isAutoStake bo
 
 			stakingAmount := fmt.Sprint(stake["available_score"].(float64) * amountStake)
 
-			stakingInfo = client.autoStaking(stakingAmount, int(stakingPool["pool_id"].(float64)))
+			staking := client.autoStaking(stakingAmount, int(stakingPool["pool_id"].(float64)))
 
-			if stakingInfo == nil {
+			if staking == nil {
 				helper.PrettyLog("error", fmt.Sprintf("%s | Get Staking Info After Auto Stacking Failed...", account.Username))
 				return
 			}
 
-			helper.PrettyLog("success", fmt.Sprintf("%s | Staking %s Score Successfully  | Current Balance: %.0f | Total Stacked: %s | Realized: %.0f | Pending: %.0f | Total Reward: %.0f | Claimable: %v", account.Username, stakingAmount, stake["available_score"].(float64), stake["stake_score"].(string), stake["realized"].(float64), stake["pending"].(float64), stake["total_reward"].(float64), stake["has_claimables"].(bool)))
+			helper.PrettyLog("success", fmt.Sprintf("%s | Staking %s Score Successfully  | Current Balance: %.0f | Total Stacked: %s | Realized: %.0f | Pending: %.0f | Total Reward: %.0f | Claimable: %v", account.Username, stakingAmount, staking["available_score"].(float64), staking["stake_score"].(string), staking["realized"].(float64), staking["pending"].(float64), staking["total_reward"].(float64), staking["has_claimables"].(bool)))
 		}
 	}
 }
