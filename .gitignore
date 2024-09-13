@@ -1,0 +1,5 @@
+# Mengabaikan file log
+*.txt
+
+# Mengabaikan folder build
+raw/
