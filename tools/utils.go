@@ -15,6 +15,12 @@ func HandleRecover() {
 	}
 }
 
+func RecoverPanic() {
+	if r := recover(); r != nil {
+		Logger("error", fmt.Sprintf("%v", r))
+	}
+}
+
 func RandomNumber(min, max int) int {
 	return rand.Intn(max-min) + min
 }

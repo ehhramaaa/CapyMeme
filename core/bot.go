@@ -84,6 +84,8 @@ func (account *Account) parsingQueryData() {
 }
 
 func (c *Client) autoCompleteTask() int {
+	defer tools.RecoverPanic()
+
 	var points int
 	isAutoSpin := config.Bool("AUTO_SPIN")
 	isAutoStake := config.Bool("AUTO_STAKING")
