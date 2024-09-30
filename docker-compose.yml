@@ -1,7 +1,7 @@
 version: '3'
 services:
   bot:
-    container_name: 'CapyMeme'
+    container_name: 'CapybaraMeme'
     image: capymeme-bot
     stop_signal: SIGINT
     restart: on-failure

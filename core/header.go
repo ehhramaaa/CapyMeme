@@ -3,16 +3,14 @@ package core
 import (
 	"fmt"
 	"net/http"
-
-	"capybara-meme/helper"
 )
 
-func setHeader(http *http.Request, referUrl string, authToken string) {
+func (c *Client) setHeader(http *http.Request) {
 
 	userAgent, os := generateRandomUserAgent()
 	if userAgent == "" || os == "" {
-		helper.PrettyLog("error", "Failed Generate Random User Agent")
-		return
+		userAgent = "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-A500FU Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/3.2 Chrome/38.0.2125.102 Mobile Safari/537.36"
+		os = "Android"
 	}
 
 	header := map[string]string{
@@ -20,19 +18,18 @@ func setHeader(http *http.Request, referUrl string, authToken string) {
 		"accept-language":    "en-US,en;q=0.9,id;q=0.8",
 		"content-type":       "application/json",
 		"priority":           "u=1, i",
-		"sec-ch-ua":          "\"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"",
+		"sec-ch-ua":          `"Android WebView";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
 		"sec-ch-ua-platform": fmt.Sprintf("\"%s\"", os),
 		"sec-fetch-dest":     "empty",
 		"sec-fetch-mode":     "cors",
 		"sec-fetch-site":     "same-site",
-		"Referer":            referUrl,
+		"Referer":            "https://bot.capybarameme.com/",
 		"Referrer-Policy":    "strict-origin-when-cross-origin",
-		"X-Requested-With":   "org.telegram.messenger.web",
 		"User-Agent":         userAgent,
 	}
 
-	if authToken != "" {
-		header["authorization"] = authToken
+	if c.accessToken != "" {
+		header["authorization"] = c.accessToken
 	}
 
 	for key, value := range header {

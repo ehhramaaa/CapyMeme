@@ -1,64 +1,14 @@
 package core
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+	"strings"
 )
 
-type Client struct {
-	apiURL     string
-	referURL   string
-	authToken  string
-	httpClient *http.Client
-}
-
-func (c *Client) makeRequest(method string, endpoint string, jsonBody interface{}) ([]byte, error) {
-	fullURL := c.apiURL + endpoint
-
-	// Convert body to JSON
-	var reqBody []byte
-	var err error
-	if jsonBody != nil {
-		reqBody, err = json.Marshal(jsonBody)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	// Create new request
-	req, err := http.NewRequest(method, fullURL, bytes.NewBuffer(reqBody))
-	if err != nil {
-		return nil, err
-	}
-
-	// Set header
-	setHeader(req, c.referURL, c.authToken)
-
-	// Send request
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	// Handle non-200 status code
-	if resp.StatusCode >= 400 {
-		// Read the response body to include in the error message
-		bodyBytes, bodyErr := io.ReadAll(resp.Body)
-		if bodyErr != nil {
-			return nil, fmt.Errorf("error status: %v, and failed to read body: %v", resp.StatusCode, bodyErr)
-		}
-		return nil, fmt.Errorf("error status: %v, error message: %s", resp.StatusCode, string(bodyBytes))
-	}
-
-	return io.ReadAll(resp.Body)
-}
+const apiUrl = "https://api.capybarameme.com"
 
 // Req Login
-func (c *Client) loginAccount(account *Account) ([]byte, error) {
+func (c *Client) getToken() (string, error) {
 	// Struct for user object to maintain field order
 	userPayload := struct {
 		ID              int    `json:"id"`
@@ -68,12 +18,12 @@ func (c *Client) loginAccount(account *Account) ([]byte, error) {
 		LanguageCode    string `json:"language_code"`
 		AllowsWriteToPm bool   `json:"allows_write_to_pm"`
 	}{
-		ID:              account.UserId,
-		FirstName:       account.FirstName,
-		LastName:        account.LastName,
-		Username:        account.Username,
-		LanguageCode:    account.LanguageCode,
-		AllowsWriteToPm: account.AllowWriteToPm,
+		ID:              c.account.userId,
+		FirstName:       c.account.firstName,
+		LastName:        c.account.lastName,
+		Username:        c.account.username,
+		LanguageCode:    c.account.languageCode,
+		AllowsWriteToPm: c.account.allowWriteToPm,
 	}
 
 	// Struct for the entire payload to maintain field order
@@ -83,66 +33,120 @@ func (c *Client) loginAccount(account *Account) ([]byte, error) {
 		AuthDate string      `json:"auth_date"`
 		Hash     string      `json:"hash"`
 	}{
-		QueryID:  account.QueryId,
+		QueryID:  c.account.queryId,
 		User:     userPayload,
-		AuthDate: account.AuthDate,
-		Hash:     account.Hash,
+		AuthDate: c.account.authDate,
+		Hash:     c.account.hash,
 	}
 
-	return c.makeRequest("POST", "/login", payload)
+	res, err := c.makeRequest("POST", "https://api.capybarameme.com/login", payload)
+	if err != nil {
+		return "", err
+	}
+
+	if token, exits := res["token"].(string); exits {
+		return token, nil
+	} else {
+		return "", fmt.Errorf("Token not found!")
+	}
 }
 
 // Req User Info
-func (c *Client) userInfo() ([]byte, error) {
-	return c.makeRequest("GET", "/auth/users/info", nil)
+func (c *Client) getUserInfo() (map[string]interface{}, error) {
+	res, err := c.makeRequest("GET", apiUrl+"/auth/users/info", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if user, exits := res["user"].(map[string]interface{}); exits {
+		return user, nil
+	} else {
+		return nil, fmt.Errorf("Field user not found!")
+	}
 }
 
 // Req Task List
-func (c *Client) taskList() ([]byte, error) {
-	return c.makeRequest("GET", "/auth/tasks/list", nil)
+func (c *Client) taskList() (map[string]interface{}, error) {
+	res, err := c.makeRequest("GET", apiUrl+"/auth/tasks/list", nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // Req Claim Task
-func (c *Client) claimTask(taskName, taskType string) ([]byte, error) {
+func (c *Client) claimTask(taskName, taskType string) (string, error) {
 	payload := map[string]string{
 		"name": taskName,
 		"type": taskType,
 	}
 
-	return c.makeRequest("POST", "/auth/tasks/submit", payload)
+	res, err := c.makeRequest("POST", apiUrl+"/auth/tasks/submit", payload)
+	if err != nil {
+		return "", err
+	}
+	if msg, exits := res["msg"].(string); exits && strings.Contains(msg, "completed") {
+		return msg, nil
+	} else {
+		return "", fmt.Errorf("Task not completed!")
+	}
 }
 
 // Req Achievement List
-func (c *Client) achieveList() ([]byte, error) {
-	return c.makeRequest("GET", "/auth/achievement/canClaim", nil)
+func (c *Client) achievementList() (map[string]interface{}, error) {
+	res, err := c.makeRequest("GET", apiUrl+"/auth/achievement/canClaim", nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // Req Claim Achievement
-func (c *Client) claimAchievement(achieveName string) ([]byte, error) {
-	return c.makeRequest("POST", fmt.Sprintf("/auth/achievement/claim/%s", achieveName), nil)
+func (c *Client) claimAchievement(achieveName string) (string, error) {
+	res, err := c.makeRequest("POST", fmt.Sprintf("/auth/achievement/claim/%s", achieveName), nil)
+	if err != nil {
+		return "", err
+	}
+	if msg, exits := res["response"].(string); exits {
+		return msg, nil
+	} else {
+		return "", fmt.Errorf("Achievement not completed!")
+	}
 }
 
 // Req Info Spin Wheel
-func (c *Client) spinInfo() ([]byte, error) {
-	return c.makeRequest("GET", "/auth/spins/current", nil)
+func (c *Client) spinInfo() (map[string]interface{}, error) {
+	res, err := c.makeRequest("GET", apiUrl+"/auth/spins/current", nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // Req Spin Wheel
-func (c *Client) spinWheel() ([]byte, error) {
-	return c.makeRequest("POST", "/auth/spins/submit", nil)
+func (c *Client) spinWheel() (map[string]interface{}, error) {
+	res, err := c.makeRequest("POST", apiUrl+"/auth/spins/submit", nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // Req Info Staking
-func (c *Client) stakingInfo() ([]byte, error) {
-	return c.makeRequest("GET", "/auth/stakes/info", nil)
+func (c *Client) stakingInfo() (map[string]interface{}, error) {
+	res, err := c.makeRequest("GET", apiUrl+"/auth/stakes/info", nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // Req Info Staking
-func (c *Client) staking(amount string, poolId int) ([]byte, error) {
+func (c *Client) staking(amount string, poolId int) {
 	payload := map[string]interface{}{
-		"score":   amount,
 		"pool_id": poolId,
+		"score":   amount,
 	}
 
-	return c.makeRequest("POST", "/auth/stakes/submit", payload)
+	c.makeRequest("POST", apiUrl+"/auth/stakes/submit", payload)
 }
